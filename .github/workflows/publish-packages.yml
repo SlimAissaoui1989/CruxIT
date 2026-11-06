@@ -30,11 +30,14 @@ jobs:
       - name: Restore
         run: dotnet restore CruxIT.sln
 
+      - name: Build
+        run: dotnet build CruxIT.sln --configuration Release --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -p:GeneratePackageOnBuild=false
+
       - name: Pack all library projects
         run: |
-          dotnet pack CruxIT.Library/CruxIT.Library.csproj -c Release --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -o ./artifacts
-          dotnet pack CruxIT.Library.DataToolkit/CruxIT.Library.DataToolkit.csproj -c Release --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -o ./artifacts
-          dotnet pack CruxIT.Library.API/CruxIT.Library.API.csproj -c Release --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -o ./artifacts
+          dotnet pack CruxIT.Library/CruxIT.Library.csproj -c Release --no-build --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -o ./artifacts
+          dotnet pack CruxIT.Library.DataToolkit/CruxIT.Library.DataToolkit.csproj -c Release --no-build --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -o ./artifacts
+          dotnet pack CruxIT.Library.API/CruxIT.Library.API.csproj -c Release --no-build --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -o ./artifacts
 
       - name: Publish packages
         run: dotnet nuget push "./artifacts/*.nupkg" --source github --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
