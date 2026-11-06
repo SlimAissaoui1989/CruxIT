@@ -18,7 +18,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern
         CxDbContext DbContext { get; }
         IDbContextTransaction? CurrentTransaction { get; }
         string? CurrentLanguageId { get; set; }
-        int? CurrentUserId { get; set; }
+        Guid? CurrentUserId { get; set; }
         string? CurrentUserName { get; set; }
         int? CurrentRoleId { get; set; }
         string? CurrentRoleName { get; set; }
@@ -32,8 +32,8 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern
         public event CxAsyncEventHandler SavedChangesAsync;
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class, IEntityBase;
-        Task<IDbContextTransaction> BeginTransactionAsync();
-        Task<int> SaveChangesAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
     public interface IUnitOfWork<TDbContext> : IUnitOfWork
         where TDbContext : CxDbContext, new()

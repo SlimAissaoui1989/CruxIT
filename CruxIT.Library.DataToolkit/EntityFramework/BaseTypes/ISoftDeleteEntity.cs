@@ -9,7 +9,7 @@ namespace CruxIT.Library.DataToolkit.EntityFramework.BaseTypes
     public interface ISoftDeleteEntity<TKey> : IEntity<TKey>
         where TKey : IEquatable<TKey>
     {
-        int? DeletedUserId { get; set; }
+        Guid? DeletedUserId { get; set; }
         string? DeletedUserName { get; set; }
         DateTime? DeletedDate { get; set; }
         public bool IsDeleted { get; set; }

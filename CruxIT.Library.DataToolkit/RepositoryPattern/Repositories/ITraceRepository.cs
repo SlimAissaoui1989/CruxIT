@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
 {
-    public interface ITraceRepository : IRepository<IUnitOfWork, int, Trace>
+    public interface ITraceRepository : IRepository<IUnitOfWork, long, Trace>
     {
-        void Add<TEntity, TKey>(TEntity entity, ActionTypes actionType)
+        void Add<TEntity, TKey>(TEntity entity, ActionTypes actionType, CancellationToken cancellationToken = default)
             where TEntity : IEntityBase<TKey>
             where TKey : IEquatable<TKey>;
     }

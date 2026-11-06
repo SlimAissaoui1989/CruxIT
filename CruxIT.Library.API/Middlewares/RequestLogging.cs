@@ -43,23 +43,23 @@ namespace CruxIT.Library.API.Middlewares
             string userAgentStr = context.Request.Headers["User-Agent"].ToString();
             if (userAgentStr == null) return;
 
-            var browser = context.Items[CxLabraryApiConstValues.BrowserItemTag];
+            var browser = context.Items[CxLibraryApiConstValues.BrowserItemTag];
 
-            var os = context.Items[CxLabraryApiConstValues.OsTag];
+            var os = context.Items[CxLibraryApiConstValues.OsTag];
 
-            var device = context.Items[CxLabraryApiConstValues.DeviceTag];
+            var device = context.Items[CxLibraryApiConstValues.DeviceTag];
 
-            var ipAddress = context.Items[CxLabraryApiConstValues.IpAdressTag];
+            var ipAddress = context.Items[CxLibraryApiConstValues.IpAdressTag];
 
-            var currentUserId = context.Items[CxLabraryApiConstValues.UserIdTag];
+            var currentUserId = context.Items[CxLibraryApiConstValues.UserIdTag];
 
-            var currentUserName = context.Items[CxLabraryApiConstValues.UserNameTag];
+            var currentUserName = context.Items[CxLibraryApiConstValues.UserNameTag];
 
-            var currentRoleId = context.Items[CxLabraryApiConstValues.RoleIdTag];
+            var currentRoleId = context.Items[CxLibraryApiConstValues.RoleIdTag];
 
-            var currentRoleName = context.Items[CxLabraryApiConstValues.RoleNameTag];
+            var currentRoleName = context.Items[CxLibraryApiConstValues.RoleNameTag];
 
-            var currentLanguage = context.Items[CxLabraryApiConstValues.LanguageTag];
+            var currentLanguage = context.Items[CxLibraryApiConstValues.LanguageTag];
 
             string responseStatus = ((HttpStatusCode)context.Response.StatusCode).ToString();
 

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
 {
-    public class TraceRepository : Repository<IUnitOfWork, int, Trace>, ITraceRepository
+    public class TraceRepository : Repository<IUnitOfWork, long, Trace>, ITraceRepository
     {
         private int _numberOfTrace = 0;
         private int _numberOfExecutingTrace = 0;
@@ -23,22 +23,22 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
             UseTrace = false;
         }
 
-        public override sealed Task<Trace> UpdateAsync(Trace entity)
+        public override sealed Task<Trace> UpdateAsync(Trace entity, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public override sealed Task RemoveAsync(Trace entity)
+        public override sealed Task RemoveAsync(Trace entity, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public override sealed Task<Trace> AddAsync(Trace entity)
+        public override sealed Task<Trace> AddAsync(Trace entity, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public virtual void Add<TEntity, TKey>(TEntity entity, ActionTypes actionType)
+        public virtual void Add<TEntity, TKey>(TEntity entity, ActionTypes actionType, CancellationToken cancellationToken = default)
             where TEntity : IEntityBase<TKey>
             where TKey : IEquatable<TKey>
         {
@@ -63,7 +63,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
                             ActionType = actionType,
                             TableId = entity.Id.ToString()!,
                             TableName = entity.GetType().Name,
-                            UserId = UnitOfWork.CurrentUserId ?? 0,
+                            UserId = UnitOfWork.CurrentUserId ?? Guid.Empty,
                             UserName = UnitOfWork.CurrentUserName!,
                             ActionDate = DateTime.UtcNow,
                             Browser = UnitOfWork.Browser,
@@ -72,21 +72,21 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
                             OS = UnitOfWork.OS,
                             Value = JsonSerializer.Serialize(entity, options)
                         };
-                        await base.AddAsync(trace);
+                        await base.AddAsync(trace, cancellationToken);
                     }
                     _numberOfExecutingTrace++;
                     if (_numberOfTrace == _numberOfExecutingTrace)
                     {
                         _traceIsSaved = true;
-                        await UnitOfWork.SaveChangesAsync();
+                        await UnitOfWork.SaveChangesAsync(cancellationToken);
                     }
                 }
             };
         }
 
-        public virtual async Task<List<Trace>> GetEntityTraceAsync(string tableName, string tableId)
+        public virtual async Task<List<Trace>> GetEntityTraceAsync(string tableName, string tableId, CancellationToken cancellationToken = default)
         {
-            return await this.OrderBy(o => o.ActionDate).GetAllAsync(c => c.TableName == tableName && c.TableId == tableId);
+            return await this.OrderBy(o => o.ActionDate).GetAllAsync(c => c.TableName == tableName && c.TableId == tableId, cancellationToken);
         }
     }
 }

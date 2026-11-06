@@ -24,7 +24,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
         protected DbSet<TEntity> DbSet { get; set; }
 
         public Repository(TUnitOfWork unitOfWork)
-            :base(unitOfWork)
+            : base(unitOfWork)
         {
             DbSet = UnitOfWork.Set<TEntity>();
         }
@@ -38,7 +38,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
             switch (actionType)
             {
                 case ActionTypes.Add:
-                    e.CreatedUserId = UnitOfWork.CurrentUserId.GetValueOrDefault();
+                    e.CreatedUserId = UnitOfWork.CurrentUserId;
                     e.CreatedUserName = UnitOfWork.CurrentUserName;
                     e.CreatedDate = DateTime.UtcNow;
                     return;
@@ -59,68 +59,68 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
             }
         }
 
-        protected virtual void AddTrace(TEntity entity, ActionTypes actionType)
+        protected virtual void AddTrace(TEntity entity, ActionTypes actionType, CancellationToken cancellationToken = default)
         {
             TrackEntityAction(entity, actionType);
             if (UseTrace)
-                UnitOfWork.Trace.Add<TEntity, TKey>(entity, actionType);
+                UnitOfWork.Trace.Add<TEntity, TKey>(entity, actionType, cancellationToken);
         }
 
-        public virtual async Task<TEntity> AddAsync(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            await DbSet.AddAsync(entity);
-            AddTrace(entity, ActionTypes.Add);
+            await DbSet.AddAsync(entity, cancellationToken);
+            AddTrace(entity, ActionTypes.Add, cancellationToken);
             return entity;
         }
 
-        public virtual async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities)
+        public virtual async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
             foreach (var entity in entities)
-                await AddAsync(entity);
+                await AddAsync(entity, cancellationToken);
             return entities;
         }
 
-        public virtual Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            return UpdateAsync(entity, ActionTypes.Update);
+            return UpdateAsync(entity, ActionTypes.Update, cancellationToken);
         }
 
-        private async Task<TEntity> UpdateAsync(TEntity entity, ActionTypes actionType = ActionTypes.Update)
+        private async Task<TEntity> UpdateAsync(TEntity entity, ActionTypes actionType = ActionTypes.Update, CancellationToken cancellationToken = default)
         {
             TEntity dbEntity;
             if (UnitOfWork.DbContext.Entry(entity).State == EntityState.Detached)
             {
-                dbEntity = await GetByIdAsync(entity.Id);
+                dbEntity = await GetByIdAsync(entity.Id, cancellationToken);
                 UnitOfWork.DbContext.Entry(dbEntity).CurrentValues.SetValues(entity);
             }
             else dbEntity = entity;
             DbSet.Update(dbEntity);
-            AddTrace(dbEntity, actionType);
+            AddTrace(dbEntity, actionType, cancellationToken);
             return dbEntity;
         }
 
-        public virtual async Task<IEnumerable<TEntity>> UpdateRangeAsync(IEnumerable<TEntity> entities)
+        public virtual async Task<IEnumerable<TEntity>> UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
             foreach (var entity in entities)
-                await UpdateAsync(entity);
+                await UpdateAsync(entity, cancellationToken);
             return entities;
         }
 
-        public virtual async Task RemoveAsync(TEntity entity)
+        public virtual async Task RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             if (entity is ISoftDeleteEntity<TKey>)
             {
-                await UpdateAsync(entity, ActionTypes.Delete);
+                await UpdateAsync(entity, ActionTypes.Delete, cancellationToken);
                 return;
             }
             DbSet.Remove(entity);
             AddTrace(entity, ActionTypes.Delete);
         }
 
-        public virtual async Task RemoveRangeAsync(params TEntity[] entities)
+        public virtual async Task RemoveRangeAsync(CancellationToken cancellationToken = default, params TEntity[] entities)
         {
             foreach (var entity in entities)
-                await RemoveAsync(entity);
+                await RemoveAsync(entity, cancellationToken);
         }
     }
 }

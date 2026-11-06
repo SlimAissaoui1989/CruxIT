@@ -1,4 +1,5 @@
 ﻿using CruxIT.Library.DataToolkit.DataConversions;
+using CruxIT.Library.DataToolkit.EntityFramework.BaseTypes;
 using CruxIT.Library.DataToolkit.EntityFramework.Entities;
 using CruxIT.Library.Loggings;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +31,27 @@ namespace CruxIT.Library.DataToolkit.EntityFramework
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var clrType = entityType.ClrType;
+
+                // Query filters are configured on the root of each inheritance hierarchy.
+                if (entityType.BaseType is null &&
+                    typeof(SoftDeleteEntity<>).IsAssignableFrom(clrType))
+                {
+                    var entity = Expression.Parameter(clrType, "e");
+                    var isDeleted = Expression.Property(
+                        entity,
+                        nameof(SoftDeleteEntity<>.IsDeleted));
+
+                    var filter = Expression.Lambda(
+                        Expression.Not(isDeleted),
+                        entity);
+
+                    modelBuilder.Entity(clrType).HasQueryFilter(filter);
+                }
             }
 
             base.OnModelCreating(modelBuilder);

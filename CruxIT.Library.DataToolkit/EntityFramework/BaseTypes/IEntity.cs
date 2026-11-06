@@ -9,10 +9,10 @@ namespace CruxIT.Library.DataToolkit.EntityFramework.BaseTypes
     public interface IEntity<TKey> : IEntityBase<TKey>
         where TKey : IEquatable<TKey>
     {
-        int CreatedUserId { get; set; }
+        Guid? CreatedUserId { get; set; }
         string? CreatedUserName { get; set; }
         DateTime CreatedDate{ get; set; }
-        int? LastUpdatedUserId { get; set; }
+        Guid? LastUpdatedUserId { get; set; }
         string? LastUpdatedUserName{ get; set; }
         DateTime? LastUpdatedDate{ get; set; }
     }

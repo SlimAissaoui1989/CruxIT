@@ -39,14 +39,14 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
                 throw new InvalidOperationException("AutoMapper is not configured (UnitOfWork.Mapper is null).");
         }
 
-        public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
             return predicate is null
-                ? await Entities.FirstOrDefaultAsync()
-                : await Entities.FirstOrDefaultAsync(predicate);
+                ? await Entities.FirstOrDefaultAsync(cancellationToken)
+                : await Entities.FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
-        public virtual async Task<TResult?> GetFirstOrDefaultAsync<TResult>(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual async Task<TResult?> GetFirstOrDefaultAsync<TResult>(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
             CheckAutoMapper();
 
@@ -57,52 +57,52 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
 
             return await query
                 .ProjectTo<TResult>(UnitOfWork.Mapper!.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
-            TEntity? entity = await GetFirstOrDefaultAsync(predicate) ?? throw EntityNotFoundException();
+            TEntity? entity = await GetFirstOrDefaultAsync(predicate, cancellationToken) ?? throw EntityNotFoundException();
             return entity;
         }
 
-        public virtual async Task<TResult> GetFirstAsync<TResult>(Expression<Func<TEntity, bool>>? predicate)
+        public virtual async Task<TResult> GetFirstAsync<TResult>(Expression<Func<TEntity, bool>>? predicate, CancellationToken cancellationToken = default)
         {
-            TResult? result = await GetFirstOrDefaultAsync<TResult>(predicate) ?? throw EntityNotFoundException();
+            TResult? result = await GetFirstOrDefaultAsync<TResult>(predicate, cancellationToken) ?? throw EntityNotFoundException();
             return result;
         }
 
-        public virtual async Task<TEntity> GetByIdAsync(TKey id)
+        public virtual async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            return await GetFirstAsync(c => c.Id.Equals(id));
+            return await GetFirstAsync(c => c.Id.Equals(id), cancellationToken);
         }
 
-        public virtual async Task<TResult> GetByIdAsync<TResult>(TKey id)
+        public virtual async Task<TResult> GetByIdAsync<TResult>(TKey id, CancellationToken cancellationToken = default)
         {
-            return await GetFirstAsync<TResult>(c => c.Id.Equals(id));
+            return await GetFirstAsync<TResult>(c => c.Id.Equals(id), cancellationToken);
         }
 
-        public virtual async Task<TEntity?> GetByIdOrDefaultAsync(TKey id)
+        public virtual async Task<TEntity?> GetByIdOrDefaultAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            return await GetFirstOrDefaultAsync(c => c.Id.Equals(id));
+            return await GetFirstOrDefaultAsync(c => c.Id.Equals(id), cancellationToken);
         }
 
-        public virtual async Task<TResult?> GetByIdOrDefaultAsync<TResult>(TKey id)
+        public virtual async Task<TResult?> GetByIdOrDefaultAsync<TResult>(TKey id, CancellationToken cancellationToken = default)
         {
-            return await GetFirstOrDefaultAsync<TResult>(c => c.Id.Equals(id));
+            return await GetFirstOrDefaultAsync<TResult>(c => c.Id.Equals(id), cancellationToken);
         }
 
-        public async virtual Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        public async virtual Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> query = Entities;
 
             if (predicate is not null)
                 query = query.Where(predicate);
 
-            return await Entities.ToListAsync();
+            return await Entities.ToListAsync(cancellationToken);
         }
 
-        public async virtual Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<TEntity, bool>>? predicate = null)
+        public async virtual Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
             CheckAutoMapper();
 
@@ -113,22 +113,22 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
 
             return await query
                 .ProjectTo<TResult>(UnitOfWork.Mapper!.ConfigurationProvider)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public virtual async Task<decimal> SumAsync(Expression<Func<TEntity, decimal>> selector)
+        public virtual async Task<decimal> SumAsync(Expression<Func<TEntity, decimal>> selector, CancellationToken cancellationToken = default)
         {
-            return await Entities.SumAsync(selector);
+            return await Entities.SumAsync(selector, cancellationToken);
         }
 
-        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> query = Entities;
 
             if (predicate is not null)
                 query = query.Where(predicate);
 
-            return await Entities.CountAsync();
+            return await Entities.CountAsync(cancellationToken);
         }
 
         public virtual CxException EntityNotFoundException()

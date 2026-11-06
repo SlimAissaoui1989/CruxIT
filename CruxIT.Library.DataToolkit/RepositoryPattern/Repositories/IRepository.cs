@@ -16,11 +16,11 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
         where TEntity : class, IEntityBase<TKey>
         where TKey : IEquatable<TKey>
     {
-        Task<TEntity> AddAsync(TEntity entity);
-        Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities);
-        Task<TEntity> UpdateAsync(TEntity entity);
-        Task<IEnumerable<TEntity>> UpdateRangeAsync(IEnumerable<TEntity> entities);
-        Task RemoveAsync(TEntity entity);
-        Task RemoveRangeAsync(params TEntity[] entities);
+        Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<IEnumerable<TEntity>> UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+        Task RemoveAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task RemoveRangeAsync(CancellationToken cancellationToken = default, params TEntity[] entities);
     }
 }

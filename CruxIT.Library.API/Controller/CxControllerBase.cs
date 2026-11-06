@@ -21,12 +21,11 @@ namespace CruxIT.Library.API.Controller
         where TDbContext : CxDbContext, new()
         where TUnitOfWork : IUnitOfWork<TDbContext>
     {
-        private bool _disposed;
         protected IConfiguration Config { get; }
         protected ILogger<CxControllerBase<TDbContext, TUnitOfWork>> Logger { get; }
         protected TUnitOfWork UnitOfWork { get; }
 
-        public int? CurrentUserId { get; private set; }
+        public Guid? CurrentUserId { get; private set; }
         public string? CurrentUserName { get; private set; }
         public int? CurrentRoleId { get; private set; }
         public string? CurrentRoleName { get; private set; }
@@ -75,36 +74,36 @@ namespace CruxIT.Library.API.Controller
             ClientInfo? userAgentInfo = Parser.GetDefault().Parse(userAgentStr);
 
             Browser = $"{userAgentInfo?.UA.Family} {userAgentInfo?.UA.Major}.{userAgentInfo?.UA.Minor}";
-            HttpContext.Items[CxLabraryApiConstValues.BrowserItemTag] = Browser;
+            HttpContext.Items[CxLibraryApiConstValues.BrowserItemTag] = Browser;
 
             OS = $"{userAgentInfo?.OS.Family} {userAgentInfo?.OS.Major}.{userAgentInfo?.OS.Minor}";
-            HttpContext.Items[CxLabraryApiConstValues.OsTag] = OS;
+            HttpContext.Items[CxLibraryApiConstValues.OsTag] = OS;
 
             Device = userAgentInfo?.Device.Family;
-            HttpContext.Items[CxLabraryApiConstValues.DeviceTag] = Device;
+            HttpContext.Items[CxLibraryApiConstValues.DeviceTag] = Device;
 
             IpAdress = CxHttpContextHelper.GetIpAdress(HttpContext);
-            HttpContext.Items[CxLabraryApiConstValues.IpAdressTag] = IpAdress;
+            HttpContext.Items[CxLibraryApiConstValues.IpAdressTag] = IpAdress;
 
-            if (int.TryParse(HttpContext.User?.FindFirstValue(CxLabraryApiConstValues.UserIdTag), out int userId))
+            if (Guid.TryParse(HttpContext.User?.FindFirstValue(CxLibraryApiConstValues.UserIdTag), out Guid userId))
             {
                 CurrentUserId = userId;
-                HttpContext.Items[CxLabraryApiConstValues.UserIdTag] = CurrentUserId;
+                HttpContext.Items[CxLibraryApiConstValues.UserIdTag] = CurrentUserId;
             }
 
-            CurrentUserName = HttpContext.User?.FindFirstValue(CxLabraryApiConstValues.UserNameTag);
-            HttpContext.Items[CxLabraryApiConstValues.UserNameTag] = CurrentUserName;
+            CurrentUserName = HttpContext.User?.FindFirstValue(CxLibraryApiConstValues.UserNameTag);
+            HttpContext.Items[CxLibraryApiConstValues.UserNameTag] = CurrentUserName;
 
-            if (int.TryParse(HttpContext.User?.FindFirstValue(CxLabraryApiConstValues.RoleIdTag), out int roleId))
+            if (int.TryParse(HttpContext.User?.FindFirstValue(CxLibraryApiConstValues.RoleIdTag), out int roleId))
             {
                 CurrentRoleId = roleId;
-                HttpContext.Items[CxLabraryApiConstValues.RoleIdTag] = roleId;
+                HttpContext.Items[CxLibraryApiConstValues.RoleIdTag] = roleId;
             }
-            CurrentRoleName = HttpContext.User?.FindFirstValue(CxLabraryApiConstValues.RoleNameTag);
-            HttpContext.Items[CxLabraryApiConstValues.RoleNameTag] = CurrentRoleName;
+            CurrentRoleName = HttpContext.User?.FindFirstValue(CxLibraryApiConstValues.RoleNameTag);
+            HttpContext.Items[CxLibraryApiConstValues.RoleNameTag] = CurrentRoleName;
 
-            CurrentLanguageId = HttpContext.Request.Headers[CxLabraryApiConstValues.LanguageTag].ToString();
-            HttpContext.Items[CxLabraryApiConstValues.LanguageTag] = CurrentLanguageId;
+            CurrentLanguageId = HttpContext.Request.Headers[CxLibraryApiConstValues.LanguageTag].ToString();
+            HttpContext.Items[CxLibraryApiConstValues.LanguageTag] = CurrentLanguageId;
         }
 
         protected CxControllerBase(IConfiguration configuration,

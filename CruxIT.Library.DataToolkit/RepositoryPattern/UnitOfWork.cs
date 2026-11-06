@@ -28,7 +28,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern
         CxDbContext IUnitOfWork.DbContext => DbContext;
 
         public string? CurrentLanguageId { get; set; }
-        public int? CurrentUserId { get; set; }
+        public Guid? CurrentUserId { get; set; }
         public string? CurrentUserName { get; set; }
         public int? CurrentRoleId { get; set; }
         public string? CurrentRoleName { get; set; }
@@ -97,10 +97,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern
             }
         }
 
-        public Task<int> SaveChangesAsync()
-            => SaveChangesAsync(CancellationToken.None);
-
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             EnsureNotDisposed();
 
@@ -120,10 +117,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern
             return DbContext.Set<TEntity>();
         }
 
-        public Task<IDbContextTransaction> BeginTransactionAsync()
-            => _context.Database.BeginTransactionAsync(CancellationToken.None);
-
-        public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+        public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
             => _context.Database.BeginTransactionAsync(cancellationToken);
 
         public Task<IDbContextTransaction> BeginTransactionAsync(System.Data.IsolationLevel isolationLevel, CancellationToken cancellationToken = default)

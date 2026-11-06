@@ -10,14 +10,14 @@ using CruxIT.Library.DataToolkit.EntityFramework.BaseTypes;
 
 namespace CruxIT.Library.DataToolkit.EntityFramework.Entities
 {
-    public class Trace: EntityIdentityIntKeyBase
+    public class Trace: Entity<long>
     {
         [MaxLength(100)]
         public virtual string TableName { get; set; } = null!;
 
         public virtual string TableId { get; set; } = null!;
 
-        public virtual int UserId { get; set; }
+        public virtual Guid UserId { get; set; }
 
         [MaxLength(255)]
         public virtual string UserName { get; set; } = null!;

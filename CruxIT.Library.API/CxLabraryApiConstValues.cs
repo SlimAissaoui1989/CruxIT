@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CruxIT.Library.API
 {
-    public static class CxLabraryApiConstValues
+    public static class CxLibraryApiConstValues
     {
         public const string UserIdTag = "user_id";
         public const string UserNameTag = "user_name";
