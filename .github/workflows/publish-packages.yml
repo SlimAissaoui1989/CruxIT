@@ -37,4 +37,4 @@ jobs:
           dotnet pack CruxIT.Library.API/CruxIT.Library.API.csproj --configuration Release --no-restore -p:PackageVersion=${{ steps.version.outputs.value }} -p:GeneratePackageOnBuild=false --output ./artifacts
 
       - name: Publish packages
-        run: dotnet nuget push "./artifacts/*.nupkg" --source github --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
+        run: dotnet nuget push "./artifacts/*.nupkg" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
