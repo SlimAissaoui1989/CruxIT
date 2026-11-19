@@ -37,14 +37,13 @@ namespace CruxIT.Library.DataToolkit.EntityFramework
             {
                 var clrType = entityType.ClrType;
 
-                // Query filters are configured on the root of each inheritance hierarchy.
-                if (entityType.BaseType is null &&
-                    typeof(SoftDeleteEntity<>).IsAssignableFrom(clrType))
+                // Configure the filter once on the root of each soft-delete hierarchy.
+                if (entityType.BaseType is null && InheritsSoftDeleteEntity(clrType))
                 {
                     var entity = Expression.Parameter(clrType, "e");
                     var isDeleted = Expression.Property(
                         entity,
-                        nameof(SoftDeleteEntity<>.IsDeleted));
+                        nameof(ISoftDeleteEntity<int>.IsDeleted));
 
                     var filter = Expression.Lambda(
                         Expression.Not(isDeleted),
@@ -55,6 +54,20 @@ namespace CruxIT.Library.DataToolkit.EntityFramework
             }
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        private static bool InheritsSoftDeleteEntity(Type clrType)
+        {
+            for (var currentType = clrType; currentType is not null; currentType = currentType.BaseType)
+            {
+                if (currentType.IsGenericType &&
+                    currentType.GetGenericTypeDefinition() == typeof(SoftDeleteEntity<>))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
