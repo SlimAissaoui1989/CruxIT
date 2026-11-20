@@ -10,29 +10,29 @@ namespace CruxIT.Library.Exceptions
     {
         public string? MessageResourceKey { get; set; }
         public object?[]? MessageResourceArgs { get; set; }
-        public CxExceptionTypes? ExceptionType { get; set; }
+        public CxHttpStatusCode? StatusCode { get; set; }
 
         public CxException(string? message = null)
             :base(message)
         {
         }
 
-        public CxException(CxExceptionTypes exceptionType, string? message = null)
+        public CxException(CxHttpStatusCode statusCode, string? message = null)
             :this(message)
         {
-            ExceptionType = exceptionType;
+            StatusCode = statusCode;
         }
 
-        public CxException(CxExceptionTypes exceptionType, string messageResourceKey, params object?[]? args)
+        public CxException(CxHttpStatusCode statusCode, string messageResourceKey, params object?[]? args)
             :this ()
         {
-            ExceptionType = exceptionType;
+            StatusCode = statusCode;
         }
 
-        public CxException(string defaultMessage, CxExceptionTypes exceptionType, string messageResourceKey, params object?[]? args)
+        public CxException(string defaultMessage, CxHttpStatusCode statusCode, string messageResourceKey, params object?[]? args)
             :this (defaultMessage)
         {
-            ExceptionType = exceptionType;
+            StatusCode = statusCode;
         }
 
         public CxException(string messageResourceKey, params object?[]? args)

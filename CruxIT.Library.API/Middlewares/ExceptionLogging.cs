@@ -53,7 +53,7 @@ namespace CruxIT.Library.API.Middlewares
             // Check if exception is a custom CxException
             if (ex is CxException cxEx)
             {
-                context.Response.StatusCode = (int?)cxEx.ExceptionType ?? (int)HttpStatusCode.BadRequest;
+                context.Response.StatusCode = (int?)cxEx.StatusCode ?? (int)HttpStatusCode.BadRequest;
                 context.Response.ContentType = "application/json";
                 if (!string.IsNullOrEmpty(cxEx.Message)
                     && !string.IsNullOrEmpty(cxEx.MessageResourceKey))

@@ -133,12 +133,12 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
 
         public virtual CxException EntityNotFoundException()
         {
-            return new CxException($"{typeof(TEntity).Name} matching the given condition was not found.", CxExceptionTypes.NotFound, "EntityNotFound");
+            return new CxException($"{typeof(TEntity).Name} matching the given condition was not found.", CxHttpStatusCode.NotFound, "EntityNotFound");
         }
 
         public virtual CxException NotFoundByIdException(TKey id)
         {
-            return new CxException($"Entity of type {typeof(TEntity).Name} with ID '{id}' was not found.", CxExceptionTypes.NotFound, "IdNotFound", id);
+            return new CxException($"Entity of type {typeof(TEntity).Name} with ID '{id}' was not found.", CxHttpStatusCode.NotFound, "IdNotFound", id);
         }
 
     }
