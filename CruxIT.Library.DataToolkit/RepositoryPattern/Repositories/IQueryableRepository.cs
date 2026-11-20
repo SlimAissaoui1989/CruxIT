@@ -27,6 +27,21 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
         Task<TResult?> GetByIdOrDefaultAsync<TResult>(TKey id, CancellationToken cancellationToken = default);
         Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
         Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<(List<TEntity> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<int> SumAsync(Expression<Func<TEntity, int>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<int?> SumAsync(Expression<Func<TEntity, int?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<long> SumAsync(Expression<Func<TEntity, long>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<long?> SumAsync(Expression<Func<TEntity, long?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<float> SumAsync(Expression<Func<TEntity, float>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<float?> SumAsync(Expression<Func<TEntity, float?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<double> SumAsync(Expression<Func<TEntity, double>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<double?> SumAsync(Expression<Func<TEntity, double?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<decimal> SumAsync(Expression<Func<TEntity, decimal>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<decimal?> SumAsync(Expression<Func<TEntity, decimal?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
+        Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
         CxException NotFoundByIdException(TKey id);
         CxException EntityNotFoundException();
     }

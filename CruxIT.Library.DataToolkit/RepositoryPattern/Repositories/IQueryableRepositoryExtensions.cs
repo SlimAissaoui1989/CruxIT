@@ -79,7 +79,9 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
             where TEntity : class, IEntityBase<TKey>
             where TKey : IEquatable<TKey>
         {
-            IQueryable<TEntity> query = repository.Entities.Distinct(comparer);
+            IQueryable<TEntity> query = comparer is null
+                ? repository.Entities.Distinct()
+                : repository.Entities.Distinct(comparer);
             return new QueryableRepository<TUnitOfWork, TKey, TEntity>(repository.UnitOfWork, query);
         }
 
@@ -88,7 +90,9 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
             where TEntity : class, IEntityBase<TKey>
             where TKey : IEquatable<TKey>
         {
-            IQueryable<TEntity> query = repository.Entities.DistinctBy(keySelector);
+            IQueryable<TEntity> query = repository.Entities
+                .GroupBy(keySelector)
+                .Select(group => group.First());
             return new QueryableRepository<TUnitOfWork, TKey, TEntity>(repository.UnitOfWork, query);
         }
 

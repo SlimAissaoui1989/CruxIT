@@ -5,10 +5,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageDescription>ASP.NET Core helpers for authentication, JSON configuration, Swagger, logging, and common API utilities.</PackageDescription>
+    <PackageProjectUrl>https://github.com/SlimAissaoui1989/CruxIT</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SlimAissaoui1989/CruxIT</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
   <ItemGroup>

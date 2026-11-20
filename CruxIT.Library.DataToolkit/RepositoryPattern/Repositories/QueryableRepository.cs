@@ -99,7 +99,7 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
             if (predicate is not null)
                 query = query.Where(predicate);
 
-            return await Entities.ToListAsync(cancellationToken);
+            return await query.ToListAsync(cancellationToken);
         }
 
         public async virtual Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
@@ -116,19 +116,83 @@ namespace CruxIT.Library.DataToolkit.RepositoryPattern.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public virtual async Task<decimal> SumAsync(Expression<Func<TEntity, decimal>> selector, CancellationToken cancellationToken = default)
+        private IQueryable<TEntity> ApplyPredicate(Expression<Func<TEntity, bool>>? predicate)
         {
-            return await Entities.SumAsync(selector, cancellationToken);
+            return predicate is null ? Entities : Entities.Where(predicate);
         }
 
-        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+        public virtual Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
         {
-            IQueryable<TEntity> query = Entities;
+            return predicate is null
+                ? Entities.AnyAsync(cancellationToken)
+                : Entities.AnyAsync(predicate, cancellationToken);
+        }
 
-            if (predicate is not null)
-                query = query.Where(predicate);
+        public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+        {
+            return predicate is null
+                ? Entities.CountAsync(cancellationToken)
+                : Entities.CountAsync(predicate, cancellationToken);
+        }
 
-            return await Entities.CountAsync(cancellationToken);
+        public virtual async Task<(List<TEntity> Items, int TotalCount)> GetPagedAsync(
+            int pageNumber,
+            int pageSize,
+            Expression<Func<TEntity, bool>>? predicate = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (pageNumber < 1)
+                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
+            if (pageSize < 1)
+                throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
+
+            var query = ApplyPredicate(predicate);
+            var totalCount = await query.CountAsync(cancellationToken);
+            var items = await query
+                .Skip(checked((pageNumber - 1) * pageSize))
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
+        }
+
+        public virtual Task<int> SumAsync(Expression<Func<TEntity, int>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<int?> SumAsync(Expression<Func<TEntity, int?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<long> SumAsync(Expression<Func<TEntity, long>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+        public virtual Task<long?> SumAsync(Expression<Func<TEntity, long?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<float> SumAsync(Expression<Func<TEntity, float>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<float?> SumAsync(Expression<Func<TEntity, float?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<double> SumAsync(Expression<Func<TEntity, double>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<double?> SumAsync(Expression<Func<TEntity, double?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<decimal> SumAsync(Expression<Func<TEntity, decimal>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<decimal?> SumAsync(Expression<Func<TEntity, decimal?>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+            => ApplyPredicate(predicate).SumAsync(selector, cancellationToken);
+
+        public virtual Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+        {
+            return ApplyPredicate(predicate).MinAsync(selector, cancellationToken);
+        }
+
+        public virtual Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+        {
+            return ApplyPredicate(predicate).MaxAsync(selector, cancellationToken);
         }
 
         public virtual CxException EntityNotFoundException()

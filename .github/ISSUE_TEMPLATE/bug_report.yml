@@ -1,0 +1,41 @@
+name: Bug report
+description: Report a reproducible problem in a CruxIT package.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Before opening an issue, search existing issues and avoid including secrets or private data.
+  - type: input
+    id: package
+    attributes:
+      label: Package and version
+      placeholder: CruxIT.Library.DataToolkit 1.2.3
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: .NET version and environment
+      placeholder: .NET 10, Windows/Linux, database provider if relevant
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps or code to reproduce
+      description: Provide the smallest example that demonstrates the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
