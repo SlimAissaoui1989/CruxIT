@@ -119,4 +119,4 @@ Bug reports, suggestions, and pull requests are welcome. Please read [CONTRIBUTI
 
 ## License
 
-No license has been specified yet. Please check back after the project owner selects and adds a license.
+This project is licensed under the [MIT License](LICENSE).

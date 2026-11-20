@@ -9,6 +9,7 @@
     <PackageProjectUrl>https://github.com/SlimAissaoui1989/CruxIT</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SlimAissaoui1989/CruxIT</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
